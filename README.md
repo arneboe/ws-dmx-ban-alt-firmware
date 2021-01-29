@@ -1,7 +1,5 @@
 # WORK IN PROGRESS! NOT YET WORKING!!!
 
-
-# ws-dmx-ban-alt-firmware
 This repository contains an alternative firmware for the WS-DMX-xch ban dmx led drivers.
 Those drivers are available from several resellers in different configurations.
 So far this code has only been tested on the WS-DMX-8CH BAN rev 4.1.
@@ -15,17 +13,17 @@ Further improvements like different dimming curves, smoother dimming etc. might 
 
 ![Alt text](programmer_pintout.jpg?raw=true "WS-DMX-8ch BAN pinout")
 
-# dependencies
+# Dependencies
 ```bash
 sudo apt install sdcc
 pip3 install stcgal
 ```
-# compiling
+# Compiling
 ```bash
 cmake -DCMAKE_TOOLCHAIN_FILE=../sdcc.toolchain ..
 ```
 
-# flashing
+# Flashing
 
 - Connect RX/TX/GND from FT232 adapter according to the pinout image.
 - Set the FT232 to 3.3V
