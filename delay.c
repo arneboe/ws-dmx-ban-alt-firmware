@@ -1,6 +1,6 @@
 #include "delay.h"
 
-void delay(uint16_t ms)
+void delay(unsigned short ms)
 {	
     //the constants have been hand tuned using a scope.
     //they are not very exact. 
