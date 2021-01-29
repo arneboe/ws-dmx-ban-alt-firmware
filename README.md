@@ -6,7 +6,7 @@ This repository contains an alternative firmware for the WS-DMX-xch ban dmx led 
 Those drivers are available from several resellers in different configurations.
 So far this code has only been tested on the WS-DMX-8CH BAN rev 4.1.
 
-The WS-DMX drivers are extremly cheap but its stock firmware fairly simple. Luckily they contain an Intel 8051 compatible chip and expose the ISP pins.
+The WS-DMX driver is attractive because it is cheap but its stock firmware is fairly basic. Luckily they contain an Intel 8051 compatible chip and expose the ISP pins.
 
 This project aims to extend the firmware to include a master intensity channel and a strobe channel.
 Further improvements like different dimming curves, smoother dimming etc. might also be added.
