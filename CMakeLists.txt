@@ -1,0 +1,1 @@
+ADD_EXECUTABLE(dmx main.c)
