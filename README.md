@@ -1,6 +1,7 @@
 # ws-dmx-ban-alt-firmware
 an alternative firmware for the ws-dmx-ban led controllers
 
+![Alt text](programmer_pintout.jpg?raw=true "WS-DMX-8ch BAN pinout")
 
 # dependencies
 ```bash
