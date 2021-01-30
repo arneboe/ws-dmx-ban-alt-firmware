@@ -39,7 +39,7 @@ void dipInit()
 
 unsigned short readDmxAddr()
 {
-    //initialize unused bits as 1 (will later inverted to 0)
+    //initialize unused bits as 1 (will later be inverted to 0)
     unsigned short result = 0xfe00;
 
     result = result | P1_2;

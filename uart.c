@@ -8,7 +8,7 @@
 volatile unsigned char busy;
 volatile unsigned char dmxData[NUM_ADRESSES];
 
-extern unsigned short dmxStartAddr; //is defined in dip.c
+extern unsigned short dmxAddr; //is defined in main.c
 
 void uartInit()
 {
@@ -67,9 +67,9 @@ void uartInterrupt()  __interrupt(SI0_VECTOR) __using(1)
                 startCodeValid = 1;
             }
             //if start was valid and the current byte is in our adress range
-            else if(startCodeValid && bytesReceived >= dmxStartAddr && bytesReceived < dmxStartAddr + NUM_ADRESSES)
+            else if(startCodeValid && bytesReceived >= dmxAddr && bytesReceived < dmxAddr + NUM_ADRESSES)
             {
-                dmxData[bytesReceived - dmxStartAddr] = dat;
+                dmxData[bytesReceived - dmxAddr] = dat;
             }
             bytesReceived++;
         }
