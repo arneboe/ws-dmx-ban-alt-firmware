@@ -38,7 +38,7 @@ void uartInit()
     AUXR  |= 0x01;              //select T2 as UART1 baud-rate generator
 
     ES  =  1;                      //enable UART1 interrupt
-    EA  =  1;
+    EA  =  1;                      //enable all interrupts
 
 }
 
