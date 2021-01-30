@@ -8,7 +8,7 @@
 volatile unsigned char busy;
 volatile unsigned char dmxData[NUM_ADRESSES];
 
-extern int dmxStartAddr; //is defined in main.c
+extern unsigned short dmxStartAddr; //is defined in dip.c
 
 void uartInit()
 {

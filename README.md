@@ -32,6 +32,11 @@ cmake -DCMAKE_TOOLCHAIN_FILE=../sdcc.toolchain ..
 - start flashing
 - turn on board
 
+- DMX needs to be disconnected for flashing to work.
+- Flasher TX needs to be disconnected for dmx to work.
+- Flasher RX/GND can stay connected while dmx is received. This is nice for debugging.
+
+
 ```bash
 stcgal -P stc15 -p /dev/ttyUSB0  dmx.ihx
 ```
