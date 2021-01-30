@@ -11,7 +11,7 @@ Further improvements like different dimming curves, smoother dimming etc. might 
 
 
 
-![Alt text](programmer_pintout.jpg?raw=true "WS-DMX-8ch BAN pinout")
+![Alt text](programmer_pinout.jpg?raw=true "WS-DMX-8ch BAN pinout")
 
 # Dependencies
 ```bash
