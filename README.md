@@ -9,7 +9,7 @@ This repository contains an alternative firmware for the WS-DMX-xch ban dmx led 
 ## DMX Channels
 
 |Ch | Function|
-|------------|
+|---|---------|
 |1 | Master intensity |
 |2 | Strobe |
 |3 | Led 1 intensity | 
