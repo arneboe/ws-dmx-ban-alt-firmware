@@ -47,13 +47,14 @@ cmake -DCMAKE_TOOLCHAIN_FILE=../sdcc.toolchain ..
 ```
 
 ## Flashing
+The STC15W404s can be programmed using a standard usb-serial adapter.
+I am using FTDI FT232 but any other adapter should work as well.
 
-- Connect RX/TX/GND from FT232 adapter according to the pinout image.
-- Set the FT232 to 3.3V
-- Connect external 5v to the board
-- turn off board
-- start flashing
-- turn on board
+1. Set the FT232 to 3.3V
+2. Connect RX/TX/GND from FT232 adapter according to the pinout image. Do not connect VCC!
+3. Connect external power supply to the board
+4. start the flasing process using the command below
+5. turn on the board
 
 - DMX needs to be disconnected for flashing to work.
 - Flasher TX needs to be disconnected for dmx to work.
