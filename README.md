@@ -33,6 +33,7 @@ This firmware aims to add some features that the original firmware is missing. M
 * Use power led to signal if dmx signal is present or not
 * Ignore illegal dmx adresses (i.e. 0 or above 512-num_channels)
 * Maybe implement some static effects
+* Lots and lots of code cleanup :D :D 
 
 # Compiling and Flashing
 ## Dependencies
