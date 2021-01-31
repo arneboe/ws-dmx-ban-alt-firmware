@@ -35,7 +35,7 @@ void ledInit()
     P3M0 = 0x30; //set P3.4 and P3.5 to strong push pull output
     P2M0 = 0x7e; //set P2.1 - P2.6 to strong push pull output
 
-    AUXR &= ~0x80;   // Set timer clock source to sysclk/12 (12T mode)
+    AUXR &= ~0x80;   // Set timer0 clock source to sysclk/12 (12T mode)
     TMOD &= 0xF0;    // Clear 4bit field for timer0
 
     //set reload counter
@@ -59,9 +59,6 @@ void ledInit()
 volatile unsigned char timer0Cnt = 0;
 void timer0Interrupt()  __interrupt(TF0_VECTOR) __using(1)
 {
-    P0_3 = 1;
-    //this timer does the software pwm
-
     //The interrupt is called approximately every 18us
     //make sure to spend way less time than that in here
     //because uart and main need time as well
@@ -72,9 +69,9 @@ void timer0Interrupt()  __interrupt(TF0_VECTOR) __using(1)
     //FIXME this code is not generic at all because there seems to be no way
     //      to put __sbit into an array? wtf?
 
-    //NOTE when the loop is too slow, we can remove the ledBrightness[0] != 0 check without much problems
-    //     This would result in the led turning on for one step when cnt==0
-    if(timer0Cnt <= ledBrightness[0] && ledBrightness[0] != 0)
+    //NOTE currently 255 is not fully on, it will still turn of for one cycle.
+    // FIXME try to fix it without increasing the performance
+    if(timer0Cnt < ledBrightness[0])
     {
         P3_4 = 1;
     }
@@ -83,7 +80,7 @@ void timer0Interrupt()  __interrupt(TF0_VECTOR) __using(1)
         P3_4 = 0;
     }
 
-    if(timer0Cnt <= ledBrightness[1] && ledBrightness[1] != 0)
+    if(timer0Cnt < ledBrightness[1])
     {
         P3_5 = 1;
     }
@@ -92,7 +89,7 @@ void timer0Interrupt()  __interrupt(TF0_VECTOR) __using(1)
         P3_5 = 0;
     }
 
-    if(timer0Cnt <= ledBrightness[2] && ledBrightness[2] != 0)
+    if(timer0Cnt < ledBrightness[2])
     {
         P2_1 = 1;
     }
@@ -101,7 +98,7 @@ void timer0Interrupt()  __interrupt(TF0_VECTOR) __using(1)
         P2_1 = 0;
     }
 
-    if(timer0Cnt <= ledBrightness[3] && ledBrightness[3] != 0)
+    if(timer0Cnt < ledBrightness[3])
     {
         P2_2 = 1;
     }
@@ -110,7 +107,7 @@ void timer0Interrupt()  __interrupt(TF0_VECTOR) __using(1)
         P2_2 = 0;
     }
 
-    if(timer0Cnt <= ledBrightness[4] && ledBrightness[4] != 0)
+    if(timer0Cnt < ledBrightness[4])
     {
         P2_3 = 1;
     }
@@ -119,7 +116,7 @@ void timer0Interrupt()  __interrupt(TF0_VECTOR) __using(1)
         P2_3 = 0;
     }
 
-    if(timer0Cnt <= ledBrightness[5] && ledBrightness[5] != 0)
+    if(timer0Cnt < ledBrightness[5])
     {
         P2_4 = 1;
     }
@@ -128,7 +125,7 @@ void timer0Interrupt()  __interrupt(TF0_VECTOR) __using(1)
         P2_4 = 0;
     }
 
-    if(timer0Cnt <= ledBrightness[6] && ledBrightness[6] != 0)
+    if(timer0Cnt < ledBrightness[6])
     {
         P2_5 = 1;
     }
@@ -137,7 +134,7 @@ void timer0Interrupt()  __interrupt(TF0_VECTOR) __using(1)
         P2_5 = 0;
     }
 
-    if(timer0Cnt <= ledBrightness[7] && ledBrightness[7] != 0)
+    if(timer0Cnt < ledBrightness[7])
     {
         P2_6 = 1;
     }
@@ -147,10 +144,6 @@ void timer0Interrupt()  __interrupt(TF0_VECTOR) __using(1)
     }
 
     timer0Cnt++;
-
-    P0_3 = 0;
-
-    //P0_3 = 0;
 
 
 }
