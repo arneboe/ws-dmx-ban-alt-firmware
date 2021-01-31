@@ -5,15 +5,33 @@ This repository contains an alternative firmware for the WS-DMX-xch ban dmx led 
 ![Alt text](programmer_pinout.jpg?raw=true "WS-DMX-8ch BAN pinout")
 
 # Features
+
+## DMX Channels
+
+|Ch | Function|
+|------------|
+|1 | Master intensity |
+|2 | Strobe |
+|3 | Led 1 intensity | 
+|4 | Led 2 intensity | 
+|5 | Led 3 intensity | 
+|6 | Led 4 intensity | 
+|7 | Led 5 intensity | 
+|8 | Led 6 intensity | 
+|9 | Led 7 intensity | 
+|10 | Led 8 intensity | 
+
 ## Implemented
 * 200hz led refresh rate
 * Master control channel to scale the brightness of all leds
 * Strobe channel (nearly finished)
 * Individual control of each led
+* Set dmx adress using dip switch
 ## Planned
 * Increase led refresh rate to at least 400hz
 * Different dimming curves
 * Use power led to signal if dmx signal is present or not
+* Ignore illegal dmx adresses (i.e. 0 or above 512-num_channels)
 
 # Compiling and Flashing
 ## Dependencies
