@@ -7,6 +7,8 @@
 #include "config.h"
 #include "leds.h"
 
+
+
 extern volatile unsigned char dmxData[NUM_ADRESSES]; //defined in uart.c
 extern unsigned short dmxAddr; //defined in uart.c
 extern unsigned char ledBrightness[NUM_LEDS]; //defined in leds.c
@@ -48,7 +50,8 @@ unsigned char functionBit = 0;
 // char c[20];
 int main()
 {
-    int i = 0;
+    unsigned char i = 0;
+    unsigned short masterBrightness = 0;
    
     P0_3 = 0; //turn on power led
 
@@ -56,6 +59,7 @@ int main()
 
     //read dips once before initializing uart to make sure that
     //we start with a valid dmx adress.
+    //FIXME check for dmxAddr==0 because thats not allowed
     dmxAddr = readDmxAddr();
     functionBit = readFunctionDip();
 
@@ -66,9 +70,20 @@ int main()
     {
         dmxAddr = readDmxAddr();
         functionBit = readFunctionDip();
-        delay(30); //TODO remove if finished testing
-        for(i = 0; i < NUM_LEDS; ++i)
+
+        //FIXME this is bad, we get interrupted a lot. need
+        //      move this to a 1ms timer or something.
+        //TODO  check if we really get interrupted a lot
+
+        // The master scaling is done in fixed point math with scale 255
+        // 255 was chosen because it allows to ommit scaling of masterBrightness
+        // and is close to the theoretical maximum scale of 257 
+        // (255*257=biggest possible unsigned short).
+        masterBrightness = dmxData[0];
+
+        for(i = 1; i < NUM_LEDS + 1; ++i)
         {
+            ledBrightness[i-1] = (dmxData[i] * masterBrightness) / 255;
             //ledBrightness[i]++;
             //ledBrightness[i]= 250;
         }

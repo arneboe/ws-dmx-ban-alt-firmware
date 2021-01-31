@@ -52,8 +52,9 @@ void uartInterrupt()  __interrupt(SI0_VECTOR) __using(1)
      *  But ignoring frame errors and just checking for RB8 works fine*/
 
 
-    static int bytesReceived = 0;
+    static unsigned short bytesReceived = 0;
     static unsigned char startCodeValid = 0; //becomes true if 
+    P0_3 = 1;
     if(RI)
     {
         unsigned char dat = SBUF;
@@ -86,6 +87,7 @@ void uartInterrupt()  __interrupt(SI0_VECTOR) __using(1)
         TI = 0; //clear transmit interrupt
         busy = 0; //clear busy flag to signal that the next byte may be sent
     }
+    P0_3 = 0;
 }
 
 void uartSendByte(unsigned char dat)

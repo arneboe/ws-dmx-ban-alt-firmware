@@ -140,8 +140,9 @@ void timer0Interrupt()  __interrupt(TF0_VECTOR) __using(1)
 
     timer0Cnt++;
 
-
     P0_3 = 0;
+
+    //P0_3 = 0;
 
 
 }
