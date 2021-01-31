@@ -51,7 +51,6 @@ unsigned short readDmxAddr()
     result = result | (P5_4 << 6);
     result = result | (P5_5 << 7);
     result = result | (P3_2 << 8);
-    //result = result | (P3_3 << 9);
 
     //due to the pullups we read a 1 when the dip is in off-position.
     //thus invert every pin

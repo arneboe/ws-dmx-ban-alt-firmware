@@ -7,8 +7,7 @@
 //volatile because it is changed by the interrupt
 volatile unsigned char busy;
 volatile unsigned char dmxData[NUM_ADRESSES];
-
-extern unsigned short dmxAddr; //is defined in main.c
+unsigned short dmxAddr = 0;
 
 void uartInit()
 {
@@ -34,11 +33,13 @@ void uartInit()
     //copied from the example code in offcial documentation
     T2L  =  (65536 - (FOSC/4/BAUD));    //Set the preload value
     T2H  =  (65536 - (FOSC/4/BAUD))>>8;
-    AUXR  =  0x14;                //T2 in 1T mode,  and run T2
-    AUXR  |= 0x01;              //select T2 as UART1 baud-rate generator
+    AUXR  =  0x14; //T2 in 1T mode,  and run T2
+    AUXR  |= 0x01; //select T2 as UART1 baud-rate generator
 
-    ES  =  1;                      //enable UART1 interrupt
-    EA  =  1;                      //enable all interrupts
+    PS = 1; //set uart interrupt to high priority
+
+    ES  =  1; //enable UART1 interrupt
+    EA  =  1; //enable all interrupts
 
 }
 

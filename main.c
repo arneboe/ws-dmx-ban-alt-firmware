@@ -7,8 +7,9 @@
 #include "config.h"
 #include "leds.h"
 
-extern volatile unsigned char dmxData[NUM_ADRESSES]; //is defined in uart.c
-unsigned short dmxAddr = 0;
+extern volatile unsigned char dmxData[NUM_ADRESSES]; //defined in uart.c
+extern unsigned short dmxAddr; //defined in uart.c
+extern unsigned char ledBrightness[NUM_LEDS]; //defined in leds.c
 unsigned char functionBit = 0;
 
 // #define NUMBER_OF_DIGITS 16   /* space for NUMBER_OF_DIGITS + '\0' */
@@ -44,40 +45,33 @@ unsigned char functionBit = 0;
 //   }
 // }
 
-unsigned char duty = 128;
-
 // char c[20];
 int main()
 {
-    // int i = 0;
+    int i = 0;
    
     P0_3 = 0; //turn on power led
 
-    P3_4 = 0;
-    P3_5 = 0;
-    P2_1 = 0;
-    P2_2 = 0;
-    P2_3 = 0;
-    P2_4 = 0;
-    P2_5 = 0;
-    P2_6 = 0;
-
-    P3M0 = 0x30; //set P3.4 and P3.5 to strong push pull output
-    P2M0 = 0x7e; //set P2.1 - P2.6 to strong push pull output
-
     dipInit();
+
+    //read dips once before initializing uart to make sure that
+    //we start with a valid dmx adress.
     dmxAddr = readDmxAddr();
     functionBit = readFunctionDip();
-    //TODO read dips once before initializing uart to make sure that
-    //we start with a valid dmx adress.
+
     uartInit(); //initially sets AUXR
-    ledInit(); //mofies AUXR
+    ledInit(); //modifies AUXR
 
     while(1)
     {
         dmxAddr = readDmxAddr();
         functionBit = readFunctionDip();
-        delay(50); //TODO remove if finished testing
+        delay(30); //TODO remove if finished testing
+        for(i = 0; i < NUM_LEDS; ++i)
+        {
+            //ledBrightness[i]++;
+            //ledBrightness[i]= 250;
+        }
         //duty++;
 
 
