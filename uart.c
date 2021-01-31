@@ -36,7 +36,7 @@ void uartInit()
     AUXR  =  0x14; //T2 in 1T mode,  and run T2
     AUXR  |= 0x01; //select T2 as UART1 baud-rate generator
 
-    PS = 1; //set uart interrupt to high priority
+    PS = 0; //set uart interrupt to low priority
 
     ES  =  1; //enable UART1 interrupt
     EA  =  1; //enable all interrupts

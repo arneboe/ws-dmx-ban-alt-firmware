@@ -12,11 +12,14 @@ volatile unsigned char ledBrightness[NUM_LEDS];
 //37888 interrupts/s = ~148hz led update rate
 //#define TIMER_START (65536-53) 
 
-//105728 interrupts/s ( every 9,45823us) = ~413hz led update rate 
-//#define TIMER_START (65536-19) 
-
 //54272 interrupts/s = ~212hz led update rate
 #define TIMER_START (65536-37) 
+
+//80384 interrupts/s = ~314hz led update rate
+//#define TIMER_START (65536-25) 
+
+//105728 interrupts/s ( every 9,45823us) = ~413hz led update rate 
+//#define TIMER_START (65536-19) 
 
 void ledInit()
 {
@@ -39,7 +42,12 @@ void ledInit()
     TH0 = TIMER_START >> 8;
     TL0 = (unsigned char)TIMER_START;
 
-    PT0 = 0; //set timer 0 interrupt priority to low (i.e. uart is higher)
+    // set timer 0 interrupt priority to high
+    // this is done to ensure stable pwm.
+    // if we set this to low the uart will interrupt
+    // the pwm and cause visible jitter when lamps 
+    // are at low values
+    PT0 = 1; 
 
     ET0 = 1; // Enable Timer0 interrupts
     EA  = 1; // Global interrupt enable
