@@ -1,10 +1,10 @@
-# Alternative Firmware for WS-DMX-xCH BAN Controllers
-This repository contains an alternative firmware for the WS-DMX-xch ban dmx led drivers.
-**Currently this firmware is only working on the WS-DMX-8CH BAN V4.1!** Support for other revisions might follow as soon as I get my hands on them.
+# Alternative Firmware for WS-DMX-xCH BAN LED Controllers
+**Currently only working on the WS-DMX-8CH BAN V4.1!** Support for other revisions might follow as soon as I get my hands on them.
 
 ![Alt text](programmer_pinout.jpg?raw=true "WS-DMX-8ch BAN pinout")
 
 # Features
+This firmware aims to add some features that the original firmware is missing. Most notably a master and a strobe channel.
 
 ## DMX Channels
 
@@ -32,6 +32,7 @@ This repository contains an alternative firmware for the WS-DMX-xch ban dmx led 
 * Different dimming curves
 * Use power led to signal if dmx signal is present or not
 * Ignore illegal dmx adresses (i.e. 0 or above 512-num_channels)
+* Maybe implement some static effects
 
 # Compiling and Flashing
 ## Dependencies
