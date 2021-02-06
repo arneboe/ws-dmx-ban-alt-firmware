@@ -59,6 +59,8 @@ pip3 install stcgal
 ```
 ## Compiling
 ```bash
+mkdir build
+cd build
 cmake -DCMAKE_TOOLCHAIN_FILE=../sdcc.toolchain ..
 ```
 
