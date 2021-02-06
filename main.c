@@ -97,11 +97,16 @@ void flickerPwrLed()
 inline void readDipSwitch()
 {
     dmxAddr = readDmxAddr();
+ 
     if(dmxAddr == 0)
     {
         dmxAddr = 1;
     }
-    // uartSendByte(dmxAddr);
+    if(dmxAddr > 512 - NUM_ADRESSES)
+    {
+        dmxAddr = 512 - NUM_ADRESSES;
+    }
+
     functionBit = readFunctionDip();
 }
 

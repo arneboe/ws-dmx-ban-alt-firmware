@@ -16,8 +16,8 @@ This firmware adds some features that the original firmware is missing.
 * Flicker power led to indicate correct dmx signal reception.
 
 ## Planned Features
+* Implement a random strobe
 * Different dimming curves
-* Ignore illegal dmx adresses (512-num_channels)
 * Maybe implement some static effects
 * increase code readability without decreasing performance
 * increase performance of the main loop
