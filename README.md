@@ -15,7 +15,7 @@ This firmware adds some features that the original firmware is missing.
 
 ## Planned Features
 * Different dimming curves
-* Ignore illegal dmx adresses (i.e. 0 or above 512-num_channels)
+* Ignore illegal dmx adresses (512-num_channels)
 * Maybe implement some static effects
 * increase code readability without decreasing performance
 * increase performance of the main loop
@@ -43,13 +43,6 @@ This firmware adds some features that the original firmware is missing.
 The code is a bit messy, lots of external variables are used.
 Some code has been unrolled to increase performance.
 Some code is in locations that it logically shouldn't be in for performance reasons.
-
-## Performance Trade-offs
-There is a hard trade-off between led update frequency and strobe flash duration.
-The strobe flash duration is calculated in the main loop, i.e. with the lowest priority.
-The higher the led update frequency, the more the main loop gets interrupted and the longer
-one iteration of the main loop takes. At 400hz it is currently impossible to go below 11 ms strobe flash duration.
-
 
 
 # Compiling and Flashing
