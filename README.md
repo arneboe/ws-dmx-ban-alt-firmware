@@ -80,8 +80,8 @@ stcgal -P stc15 -p /dev/ttyUSB0  dmx.ihx
 
 # License
 This code is released under the cc-by-nc license. I.e. you may not use it commercially.
-If you want to commercialize this code feel free to contact me.
-
+If you want to commercialize this code feel free to contact me to discuss different licensing options.
+Frankly speaking: If you want to make money using my code you have to pay me :-)
 
 
 
