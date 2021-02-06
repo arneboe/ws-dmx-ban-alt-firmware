@@ -4,11 +4,11 @@
 ![Alt text](programmer_pinout.jpg?raw=true "WS-DMX-8ch BAN pinout")
 
 # Features
-This firmware aims to add some features that the original firmware is missing. Most notably a master and a strobe channel.
+This firmware adds some features that the original firmware is missing.
 
 * 400hz led refresh rate
 * Master control channel to scale the brightness of all leds
-* Strobe channel (nearly finished)
+* Strobe channel (2hz to 40hz) with a flash length of 10ms
 * Individual control of each led
 * Set dmx adress using dip switch
 * Flicker power led to indicate correct dmx signal reception.
@@ -26,7 +26,7 @@ This firmware aims to add some features that the original firmware is missing. M
 |Ch | Function|
 |---|---------|
 |1 | Master intensity |
-|2 | Strobe |
+|2 | Strobe 2hz to 40hz |
 |3 | Led 1 intensity | 
 |4 | Led 2 intensity | 
 |5 | Led 3 intensity | 

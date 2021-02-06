@@ -15,11 +15,14 @@
 
 extern volatile unsigned char dmxData[NUM_ADRESSES]; //defined in uart.c
 extern unsigned short dmxAddr; //defined in uart.c
+unsigned char functionBit = 0;
 extern unsigned char ledBrightness[NUM_LEDS]; //defined in leds.c
 
 /** this value is increased by a timer every 2.5ms.
  *  It is used in the strobe logic.
- *  The strobe logic also resets this value */
+ *  The strobe logic also resets this value to zero every time a strobe flash finishes.
+ *  The unit of this is 2.5ms thus the maximum delay the timer can achieve is 
+ *  637ms */
 volatile unsigned char timeMs = 0;
 
 void initStrobeTimer()
@@ -50,10 +53,27 @@ void strobeTimerInterrupt()  __interrupt(TF1_VECTOR) __using(1)
 }
 
 
-unsigned char calcStrobeTimeMs(unsigned char strobeDmxVal)
+inline unsigned char calcStrobeTimeMs(unsigned char strobeDmxVal)
 {
-    //TODO implement me
-    return strobeDmxVal;
+    // maps between 200 and 10 timer ticks
+    // i.e. 500ms and 25ms delay
+    // i.e. 2hz and 40hz
+
+    /** 
+     * Unoptimized floating point version of this function:
+     * 
+     * long map(long x, long in_min, long in_max, long out_min, long out_max) 
+     * {
+     *     return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
+     * }
+     * return map(strobeDmxVal, 0, 255, 255, 25);
+     * 
+     * This code has been optimized by using fixed comma math with factor 255.
+     */
+
+    
+    return (51000 - strobeDmxVal * 190)/255;
+
 }
 
 void flickerPwrLed()
@@ -74,23 +94,31 @@ void flickerPwrLed()
     }
 }
 
+inline void readDipSwitch()
+{
+    dmxAddr = readDmxAddr();
+    if(dmxAddr == 0)
+    {
+        dmxAddr = 1;
+    }
+    // uartSendByte(dmxAddr);
+    functionBit = readFunctionDip();
+}
+
+
 void main()
 {
     unsigned short masterBrightness = 0;
     unsigned char strobeDmx = 0;
     unsigned char strobeOffTime = 0;
-    unsigned char functionBit = 0;
+    
     unsigned char oldStrobe = 0;
     unsigned char strobeOn = 0; //current state of strobe (led on or off)
     
 
     dipInit();
 
-    // //read dips once before initializing uart to make sure that
-    // //we start with a valid dmx adress.
-    // //FIXME check for dmxAddr==0 because thats not allowed
-    dmxAddr = readDmxAddr();
-    functionBit = readFunctionDip();
+    readDipSwitch();
 
     uartInit(); //initially sets AUXR
     ledInit(); //modifies AUXR
@@ -100,11 +128,10 @@ void main()
 
     while(1)
     {
+        //the sdcc does not inline this, if we need more performance inline manually
         flickerPwrLed();
+        readDipSwitch();
 
-
-        dmxAddr = readDmxAddr();
-        functionBit = readFunctionDip();
 
         strobeDmx = dmxData[1];
         if(!oldStrobe && strobeDmx)
