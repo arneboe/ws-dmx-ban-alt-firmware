@@ -22,18 +22,33 @@ This firmware aims to add some features that the original firmware is missing. M
 |10 | Led 8 intensity | 
 
 ## Implemented
-* 200hz led refresh rate
+* 400hz led refresh rate
 * Master control channel to scale the brightness of all leds
 * Strobe channel (nearly finished)
 * Individual control of each led
 * Set dmx adress using dip switch
+
 ## Planned
-* Increase led refresh rate to at least 400hz
 * Different dimming curves
 * Use power led to signal if dmx signal is present or not
 * Ignore illegal dmx adresses (i.e. 0 or above 512-num_channels)
 * Maybe implement some static effects
-* Lots and lots of code cleanup :D :D 
+* increase code readability without decreasing performance
+* increase performance of the main loop
+
+
+# State of the Code
+The code is a bit messy, lots of external variables are used.
+Some code has been unrolled to increase performance.
+Some code is in locations that it logically shouldn't be in for performance reasons.
+
+## Performance Trade-offs
+There is a hard trade-off between led update frequency and strobe flash duration.
+The strobe flash duration is calculated in the main loop, i.e. with the lowest priority.
+The higher the led update frequency, the more the main loop gets interrupted and the longer
+one iteration of the main loop takes. At 400hz it is currently impossible to go below 11 ms strobe flash duration.
+
+
 
 # Compiling and Flashing
 ## Dependencies
