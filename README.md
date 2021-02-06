@@ -6,6 +6,21 @@
 # Features
 This firmware aims to add some features that the original firmware is missing. Most notably a master and a strobe channel.
 
+* 400hz led refresh rate
+* Master control channel to scale the brightness of all leds
+* Strobe channel (nearly finished)
+* Individual control of each led
+* Set dmx adress using dip switch
+* Flicker power led to indicate correct dmx signal reception.
+
+## Planned Features
+* Different dimming curves
+* Ignore illegal dmx adresses (i.e. 0 or above 512-num_channels)
+* Maybe implement some static effects
+* increase code readability without decreasing performance
+* increase performance of the main loop
+
+
 ## DMX Channels
 
 |Ch | Function|
@@ -21,20 +36,7 @@ This firmware aims to add some features that the original firmware is missing. M
 |9 | Led 7 intensity | 
 |10 | Led 8 intensity | 
 
-## Implemented
-* 400hz led refresh rate
-* Master control channel to scale the brightness of all leds
-* Strobe channel (nearly finished)
-* Individual control of each led
-* Set dmx adress using dip switch
-* Flicker power led to indicate correct dmx signal reception
 
-## Planned
-* Different dimming curves
-* Ignore illegal dmx adresses (i.e. 0 or above 512-num_channels)
-* Maybe implement some static effects
-* increase code readability without decreasing performance
-* increase performance of the main loop
 
 
 # State of the Code

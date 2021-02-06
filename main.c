@@ -56,6 +56,23 @@ unsigned char calcStrobeTimeMs(unsigned char strobeDmxVal)
     return strobeDmxVal;
 }
 
+void flickerPwrLed()
+{
+    static unsigned char pwrLedCnt = 0;
+    //if power led has been turned off by uart, leave it off for 255 loop iterations
+    if(P0_3)
+    {
+        pwrLedCnt++;
+        if(pwrLedCnt == 255)
+        {
+            //turn on power led 
+            //uart turns it off when it has received a correct frame.
+            //this results in flickering if dmx is present and steady on if no dmx present.
+            P0_3 = 0;
+            pwrLedCnt = 0;
+        }
+    }
+}
 
 void main()
 {
@@ -65,7 +82,7 @@ void main()
     unsigned char functionBit = 0;
     unsigned char oldStrobe = 0;
     unsigned char strobeOn = 0; //current state of strobe (led on or off)
-    unsigned char pwrLedCnt = 0;
+    
 
     dipInit();
 
@@ -83,14 +100,8 @@ void main()
 
     while(1)
     {
-        pwrLedCnt++;
-        if(pwrLedCnt == 255)
-        {
-            //turn on power led 
-            //uart turns it off when it has received a correct frame.
-            //this results in flickering if dmx is present and steady on if no dmx present.
-            P0_3 = 0;
-        }
+        flickerPwrLed();
+
 
         dmxAddr = readDmxAddr();
         functionBit = readFunctionDip();
