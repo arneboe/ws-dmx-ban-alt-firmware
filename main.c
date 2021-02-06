@@ -42,10 +42,9 @@ void initStrobeTimer()
 }
 
 
-/** Is invoked at 1000hz */
-void systick()  __interrupt(TF1_VECTOR) __using(1)
+void strobeTimerInterrupt()  __interrupt(TF1_VECTOR) __using(1)
 {
-    // the systick has the same priority as uart.
+    // has the same priority as uart.
     // thus we can do nearly nothing in here. 
     ++timeMs;
 }
@@ -89,10 +88,12 @@ void main()
         functionBit = readFunctionDip();
 
         strobeDmx = dmxData[1];
-        if(!oldStrobe)
+        if(!oldStrobe && strobeDmx)
         {
             //strobe has been turned on, reset strobe start time to now
             timeMs = 0;
+            TH1 = STROBE_TIMER_START >> 8;
+            TL1 = (unsigned char)STROBE_TIMER_START;
             strobeOn = 1;
         }
         oldStrobe = strobeDmx;
@@ -102,7 +103,7 @@ void main()
             if(strobeOn)
             {
                 //check if strobe flash needs to be turned off
-                if(timeMs >  STROBE_ON_TIME_MS)
+                if(timeMs >=  STROBE_ON_TIME_MS)
                 {
                     //led was on long enough, turn off
                     masterBrightness = 0;
@@ -139,13 +140,24 @@ void main()
         }
 
 
-        for(i = 2; i < NUM_LEDS + 2; ++i)
-        {
-            // The master scaling is done in fixed point math with scale 255
-            // 255 was chosen because it allows to ommit scaling of masterBrightness
-            // and is close to the theoretical maximum scale of 257 
-            // (255*257=biggest possible unsigned short).
-            ledBrightness[i-2] = (dmxData[i] * masterBrightness) / 255;
-        }
+        // The master scaling is done in fixed point math with scale 255
+        // 255 was chosen because it allows to ommit scaling of masterBrightness
+        // and is close to the theoretical maximum scale of 257 
+        // (255*257=biggest possible unsigned short).
+
+        //loop unrolled for performance reasons
+        ledBrightness[0] = (dmxData[2] * masterBrightness) / 255;
+        ledBrightness[1] = (dmxData[3] * masterBrightness) / 255;
+        ledBrightness[2] = (dmxData[4] * masterBrightness) / 255;
+        ledBrightness[3] = (dmxData[5] * masterBrightness) / 255;
+        ledBrightness[4] = (dmxData[6] * masterBrightness) / 255;
+        ledBrightness[5] = (dmxData[7] * masterBrightness) / 255;
+        ledBrightness[6] = (dmxData[8] * masterBrightness) / 255;
+        ledBrightness[7] = (dmxData[9] * masterBrightness) / 255;
+
+        // for(i = 2; i < NUM_LEDS + 2; ++i)
+        // {
+        //     ledBrightness[i-2] = (dmxData[i] * masterBrightness) / 255;
+        // }
     }
 }
