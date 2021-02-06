@@ -4,10 +4,9 @@
 #include "stc15w.h"
 #include "config.h"
 
-//volatile because it is changed by the interrupt
-volatile unsigned char busy;
+volatile unsigned char busy;//true if we are currently sending a byte 
 volatile unsigned char dmxData[NUM_ADRESSES];
-unsigned short dmxAddr = 0;
+unsigned short dmxAddr = 0; //is written to from outside
 
 void uartInit()
 {
@@ -51,11 +50,10 @@ void uartInterrupt()  __interrupt(SI0_VECTOR) __using(1)
      *  I have no idea why that happens :-( 
      *  But ignoring frame errors and just checking for RB8 works fine*/
 
-
     static unsigned short bytesReceived = 0;
-    static unsigned char startCodeValid = 0; //becomes true if 
+    static unsigned char startCodeValid = 0; 
 
-    if(RI)
+    if(RI) //if we received a byte
     {
         unsigned char dat = SBUF;
         RI = 0;
@@ -82,7 +80,7 @@ void uartInterrupt()  __interrupt(SI0_VECTOR) __using(1)
         }
     }
 
-    if (TI)
+    if (TI) //if we have sent a byte
     {
         TI = 0; //clear transmit interrupt
         busy = 0; //clear busy flag to signal that the next byte may be sent
