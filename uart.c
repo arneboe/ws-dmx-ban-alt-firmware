@@ -76,12 +76,12 @@ void uartInterrupt()  __interrupt(SI0_VECTOR) __using(1)
         else //invalid frame. 
         {
             //check if frame is complete.
-            //we dont check for == 513 because dmx controllers are allowed to skip
-            //part of the frame when they see fit.
+            //we dont check for (bytesReceived == 513) because dmx controllers are allowed 
+            //to end a frame early when there are no lights configured in that range. 
             if(bytesReceived >= dmxAddr + NUM_ADRESSES)
             {
                 //turn off power led.
-                //the main loop will turn it back on resulting in flickering led
+                //the main loop will turn it back on resulting in a flickering led
                 //if dmx is present
                 P0_3 = 1;
             }
