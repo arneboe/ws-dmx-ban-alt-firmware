@@ -71,7 +71,10 @@ I am using FTDI FT232 but any other adapter should work as well.
 1. Set the FT232 to 3.3V
 2. Connect RX/TX/GND from FT232 adapter according to the pinout image. Do not connect VCC!
 3. Connect external power supply to the board
-4. start the flasing process using the command below
+4. start flashing using the following command
+```bash
+stcgal -P stc15 -p /dev/ttyUSB0  dmx.ihx
+```
 5. turn on the board
 
 - DMX needs to be disconnected for flashing to work.
@@ -79,9 +82,7 @@ I am using FTDI FT232 but any other adapter should work as well.
 - Flasher RX/GND can stay connected while dmx is received. This is nice for debugging.
 
 
-```bash
-stcgal -P stc15 -p /dev/ttyUSB0  dmx.ihx
-```
+
 
 
 # License
