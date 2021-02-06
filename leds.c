@@ -13,13 +13,13 @@ volatile unsigned char ledBrightness[NUM_LEDS];
 //#define TIMER_START (65536-53) 
 
 //54272 interrupts/s = ~212hz led update rate
-#define TIMER_START (65536-37) 
+//#define TIMER_START (65536-37) 
 
 //80384 interrupts/s = ~314hz led update rate
 //#define TIMER_START (65536-25) 
 
 //105728 interrupts/s ( every 9,45823us) = ~413hz led update rate 
-//#define TIMER_START (65536-19) 
+#define TIMER_START (65536-19) 
 
 void ledInit()
 {
@@ -45,8 +45,8 @@ void ledInit()
     // set timer 0 interrupt priority to high
     // this is done to ensure stable pwm.
     // if we set this to low the uart will interrupt
-    // the pwm and cause visible jitter when lamps 
-    // are at low values
+    // the pwm and cause visible flicker when the leds are
+    // at low brightness 
     PT0 = 1; 
 
     ET0 = 1; // Enable Timer0 interrupts
@@ -59,18 +59,12 @@ void ledInit()
 volatile unsigned char timer0Cnt = 0;
 void timer0Interrupt()  __interrupt(TF0_VECTOR) __using(1)
 {
-    //The interrupt is called approximately every 18us
-    //make sure to spend way less time than that in here
-    //because uart and main need time as well
-
-    //right now this method takes up ~7us.
-
 
     //FIXME this code is not generic at all because there seems to be no way
     //      to put __sbit into an array? wtf?
 
     //NOTE currently 255 is not fully on, it will still turn of for one cycle.
-    // FIXME try to fix it without increasing the performance
+    // FIXME try to fix it without decreasing the performance
     if(timer0Cnt < ledBrightness[0])
     {
         P3_4 = 1;
@@ -144,6 +138,5 @@ void timer0Interrupt()  __interrupt(TF0_VECTOR) __using(1)
     }
 
     timer0Cnt++;
-
 
 }
