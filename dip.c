@@ -3,8 +3,6 @@
 #include <mcs51/8051.h>
 #include "stc15w.h"
 
-unsigned short dmxStartAddr = 1;
-
 /* dip mapping:
    1  = P1.2
    2  = P1.3
