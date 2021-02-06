@@ -1,5 +1,4 @@
 # Alternative Firmware for WS-DMX-xCH BAN LED Controllers
-**Currently only working on the WS-DMX-8CH BAN V4.1!** Support for other revisions might follow as soon as I get my hands on them.
 
 ![](https://raw.githubusercontent.com/arneboe/ws-dmx-ban-alt-firmware/main/programmer_pinout.jpg?v=2&s=10)
 
@@ -22,8 +21,13 @@ This firmware adds some features that the original firmware is missing.
 * increase code readability without decreasing performance
 * increase performance of the main loop
 
+# Supported controllers
+**Currently only working on the WS-DMX-8CH BAN V4.1!**
 
-## DMX Channels
+Support for other revisions might follow as soon as I get my hands on them.
+
+
+# DMX Channels
 
 |Ch | Function|
 |---|---------|
