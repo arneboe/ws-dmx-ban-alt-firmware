@@ -59,7 +59,6 @@ unsigned char calcStrobeTimeMs(unsigned char strobeDmxVal)
 
 void main()
 {
-    unsigned char i = 0;
     unsigned short masterBrightness = 0;
     unsigned char strobeDmx = 0;
     unsigned char strobeOffTime = 0;
