@@ -27,10 +27,10 @@ This firmware aims to add some features that the original firmware is missing. M
 * Strobe channel (nearly finished)
 * Individual control of each led
 * Set dmx adress using dip switch
+* Flicker power led to indicate correct dmx signal reception
 
 ## Planned
 * Different dimming curves
-* Use power led to signal if dmx signal is present or not
 * Ignore illegal dmx adresses (i.e. 0 or above 512-num_channels)
 * Maybe implement some static effects
 * increase code readability without decreasing performance

@@ -65,6 +65,7 @@ void main()
     unsigned char functionBit = 0;
     unsigned char oldStrobe = 0;
     unsigned char strobeOn = 0; //current state of strobe (led on or off)
+    unsigned char pwrLedCnt = 0;
 
     dipInit();
 
@@ -82,7 +83,15 @@ void main()
 
     while(1)
     {
-      //  uartSendByte('\n');
+        pwrLedCnt++;
+        if(pwrLedCnt == 255)
+        {
+            //turn on power led 
+            //uart turns it off when it has received a correct frame.
+            //this results in flickering if dmx is present and steady on if no dmx present.
+            P0_3 = 0;
+        }
+
         dmxAddr = readDmxAddr();
         functionBit = readFunctionDip();
 
