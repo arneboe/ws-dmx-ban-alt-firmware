@@ -21,6 +21,8 @@ volatile unsigned char ledBrightness[NUM_LEDS];
 //105728 interrupts/s ( every 9,45823us) = ~413hz led update rate 
 #define TIMER_START (65536-19) 
 
+extern volatile unsigned char strobeCnt; //declared in main.c
+
 void ledInit()
 {
     P3_4 = 0;
@@ -135,6 +137,16 @@ void timer0Interrupt()  __interrupt(TF0_VECTOR) __using(1)
     else
     {
         P2_6 = 0;
+    }
+
+    //Ideally the strobe should be handled by a different
+    //timer but some of the WS-DMX boards use really simple
+    //STC controllers that only have two timers.
+    //Therefore we generate the strobe tick in here.
+    //one increment of strobeCnt is ~2.48ms
+    if(timer0Cnt == 255)
+    {
+        strobeCnt++;
     }
 
     timer0Cnt++;

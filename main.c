@@ -9,8 +9,8 @@
 
 //400 interrupts/s 
 #define STROBE_TIMER_START (65536-FOSC/12/400)
-// on time of a strobe flash in 2.5ms steps
-#define STROBE_ON_TIME_MS 4
+// on time of a strobe flash in ~2.5ms steps
+#define STROBE_ON_TIME_MS 3
 
 
 extern volatile unsigned char dmxData[NUM_ADRESSES]; //defined in uart.c
@@ -18,67 +18,17 @@ extern unsigned short dmxAddr; //defined in uart.c
 unsigned char functionBit = 0;
 extern unsigned char ledBrightness[NUM_LEDS]; //defined in leds.c
 
-/** this value is increased by a timer every 2.5ms.
+/** this value is increased by the led timer every 2,42130688ms .
  *  It is used in the strobe logic.
  *  The strobe logic also resets this value to zero every time a strobe flash finishes.
- *  The unit of this is 2.5ms thus the maximum delay the timer can achieve is 
- *  637ms */
-volatile unsigned char timeMs = 0;
+ *  The maximum delay the timer can achieve is  637ms */
+volatile unsigned char strobeCnt = 0;
 
-void initStrobeTimer()
+//used to clicker the power led
+unsigned char pwrLedCnt = 0;
+
+inline void flickerPwrLed()
 {
-    AUXR &= 0xBF;   // Set timer1 clock source to sysclk/12 (12T mode)
-    TMOD &= 0x0F;    // Clear 4bit field for timer1
-
-    //set reload counter
-    TH1 = STROBE_TIMER_START >> 8;
-    TL1 = (unsigned char)STROBE_TIMER_START;
-
-    // set timer 1 interrupt priority to low
-    PT1 = 0; 
-
-    TR1 = 1; // Start Timer 1
-
-    //enable interrupt
-    ET1 = 1;
-    EA  = 1;
-}
-
-
-void strobeTimerInterrupt()  __interrupt(TF1_VECTOR) __using(1)
-{
-    // has the same priority as uart.
-    // thus we can do nearly nothing in here. 
-    ++timeMs;
-}
-
-
-inline unsigned char calcStrobeTimeMs(unsigned char strobeDmxVal)
-{
-    // maps between 200 and 10 timer ticks
-    // i.e. 500ms and 25ms delay
-    // i.e. 2hz and 40hz
-
-    /** 
-     * Unoptimized floating point version of this function:
-     * 
-     * long map(long x, long in_min, long in_max, long out_min, long out_max) 
-     * {
-     *     return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
-     * }
-     * return map(strobeDmxVal, 0, 255, 255, 25);
-     * 
-     * This code has been optimized by using fixed comma math with factor 255.
-     */
-
-    
-    return (51000 - strobeDmxVal * 190)/255;
-
-}
-
-void flickerPwrLed()
-{
-    static unsigned char pwrLedCnt = 0;
     //if power led has been turned off by uart, leave it off for 255 loop iterations
     if(P0_3)
     {
@@ -111,6 +61,29 @@ inline void readDipSwitch()
 }
 
 
+inline unsigned char calcStrobeTimeMs(unsigned char strobeDmxVal)
+{
+    // maps between 200 and 10 timer ticks
+    // i.e. 500ms and 25ms delay
+    // i.e. 2hz and 40hz
+
+    /** 
+     * Unoptimized floating point version of this function:
+     * 
+     * long map(long x, long in_min, long in_max, long out_min, long out_max) 
+     * {
+     *     return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
+     * }
+     * return map(strobeDmxVal, 0, 255, 255, 25);
+     * 
+     * This code has been optimized by using fixed comma math with factor 255.
+     */
+
+    
+    return (51000 - strobeDmxVal * 190)/255;
+
+}
+
 void main()
 {
     unsigned short masterBrightness = 0;
@@ -127,22 +100,19 @@ void main()
 
     uartInit(); //initially sets AUXR
     ledInit(); //modifies AUXR
-    initStrobeTimer(); //modifes AUXR
 
     P0_3 = 0; //turn on power
 
     while(1)
     {
-        //the sdcc does not inline this, if we need more performance inline manually
         flickerPwrLed();
         readDipSwitch();
-
 
         strobeDmx = dmxData[1];
         if(!oldStrobe && strobeDmx)
         {
             //strobe has been turned on, reset strobe start time to now
-            timeMs = 0;
+            strobeCnt = 0;
             TH1 = STROBE_TIMER_START >> 8;
             TL1 = (unsigned char)STROBE_TIMER_START;
             strobeOn = 1;
@@ -154,12 +124,12 @@ void main()
             if(strobeOn)
             {
                 //check if strobe flash needs to be turned off
-                if(timeMs >=  STROBE_ON_TIME_MS)
+                if(strobeCnt >= STROBE_ON_TIME_MS)
                 {
                     //led was on long enough, turn off
                     masterBrightness = 0;
                     strobeOn = 0;
-                    timeMs = 0;
+                    strobeCnt = 0;
                 }
                 else
                 {
@@ -171,12 +141,12 @@ void main()
             {
                 strobeOffTime = calcStrobeTimeMs(strobeDmx);
                 //check if it is time to turn on strobe
-                if(timeMs > strobeOffTime)
+                if(strobeCnt > strobeOffTime)
                 {
                     //time to turn the strobe back on
                     masterBrightness = dmxData[0];
                     strobeOn = 1;
-                    timeMs = 0;
+                    strobeCnt = 0;
                 }
                 else
                 {
@@ -205,10 +175,5 @@ void main()
         ledBrightness[5] = (dmxData[7] * masterBrightness) / 255;
         ledBrightness[6] = (dmxData[8] * masterBrightness) / 255;
         ledBrightness[7] = (dmxData[9] * masterBrightness) / 255;
-
-        // for(i = 2; i < NUM_LEDS + 2; ++i)
-        // {
-        //     ledBrightness[i-2] = (dmxData[i] * masterBrightness) / 255;
-        // }
     }
 }
