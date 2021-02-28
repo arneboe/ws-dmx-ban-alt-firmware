@@ -7,7 +7,7 @@
 # Features
 This firmware adds some features that the original firmware is missing.
 
-* 400hz led refresh rate
+* Increase led refresh rate to 400hz (up from 200hz)
 * Master control channel to scale the brightness of all leds
 * Strobe channel (2hz to 40hz) with a flash length of 10ms
 * Individual control of each led
@@ -22,9 +22,9 @@ This firmware adds some features that the original firmware is missing.
 * increase performance of the main loop
 
 # Supported controllers
-**Currently only working on the WS-DMX-8CH BAN V4.1!**
+*  WS-DMX-8CH BAN V4.1
 
-Support for other revisions might follow as soon as I get my hands on them.
+Support for others will follow as soon as I get my hands on them.
 
 
 # DMX Channels
