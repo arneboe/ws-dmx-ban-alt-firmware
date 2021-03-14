@@ -30,10 +30,12 @@ void uartInit()
 
     //calculate timer overlow values based to achieve BAUD rate based on cpu frequency 
     //copied from the example code in offcial documentation
-    T2L  =  (65536 - (FOSC/4/BAUD));    //Set the preload value
-    T2H  =  (65536 - (FOSC/4/BAUD))>>8;
-    AUXR  =  0x14; //T2 in 1T mode,  and run T2
-    AUXR  |= 0x01; //select T2 as UART1 baud-rate generator
+    
+    TL1  =  (65536 - (FOSC/4/BAUD));    //Set the preload value
+    TH1  =  (65536 - (FOSC/4/BAUD))>>8;
+    AUXR = 0x40; //T1 in 1T mode and use T1 as uart1 baud-rate generator
+
+    TR1 = 1; //start timer 1
 
     PS = 0; //set uart interrupt to low priority
 
