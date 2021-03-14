@@ -113,8 +113,6 @@ void main()
         {
             //strobe has been turned on, reset strobe start time to now
             strobeCnt = 0;
-            TH1 = STROBE_TIMER_START >> 8;
-            TL1 = (unsigned char)STROBE_TIMER_START;
             strobeOn = 1;
         }
         oldStrobe = strobeDmx;
