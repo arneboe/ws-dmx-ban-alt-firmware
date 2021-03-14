@@ -1,5 +1,6 @@
 #include "leds.h"
 #include "config.h"
+#include "stc15w.h"
 
 //software pwm for leds
 

@@ -1,7 +1,7 @@
 #include "uart.h"
 #include <mcs51/lint.h>
 #include <mcs51/8051.h>
-#include "stc15w.h"
+#include "stc11l04.h"
 #include "config.h"
 
 volatile unsigned char busy;//true if we are currently sending a byte 

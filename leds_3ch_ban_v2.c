@@ -1,0 +1,104 @@
+#include "leds.h"
+#include "config.h"
+#include "stc11l04.h"
+
+//software pwm for leds
+
+//brightness array for leds, this is written to from somewhere else
+volatile unsigned char ledBrightness[NUM_LEDS];
+
+//27136 interrupts/s @ 2007916.66 increments/s
+//#define TIMER_START 65462
+
+//37888 interrupts/s = ~148hz led update rate
+//#define TIMER_START (65536-53) 
+
+//54272 interrupts/s = ~212hz led update rate
+//#define TIMER_START (65536-37) 
+
+//80384 interrupts/s = ~314hz led update rate
+//#define TIMER_START (65536-25) 
+
+//105728 interrupts/s ( every 9,45823us) = ~413hz led update rate 
+#define TIMER_START (65536-19) 
+
+extern volatile unsigned char strobeCnt; //declared in main.c
+
+void ledInit()
+{
+    P3_4 = 0;
+    P3_3 = 0;
+    P3_2 = 0;
+
+    P3M0 = 0x1C; //set P3.4, P3.3 and P3.2 to strong push pull output
+
+    AUXR &= ~0x80;   // Set timer0 clock source to sysclk/12 (12T mode)
+    TMOD &= 0xF0;    // Clear 4bit field for timer0
+
+    //set reload counter
+    TH0 = TIMER_START >> 8;
+    TL0 = (unsigned char)TIMER_START;
+
+    // set timer 0 interrupt priority to high
+    // this is done to ensure stable pwm.
+    // if we set this to low the uart will interrupt
+    // the pwm and cause visible flicker when the leds are
+    // at low brightness 
+    PT0 = 1; 
+
+    ET0 = 1; // Enable Timer0 interrupts
+    EA  = 1; // Global interrupt enable
+
+    TR0 = 1; // Start Timer 0
+}
+
+
+volatile unsigned char timer0Cnt = 0;
+void timer0Interrupt()  __interrupt(TF0_VECTOR) __using(1)
+{
+
+    //FIXME this code is not generic at all because there seems to be no way
+    //      to put __sbit into an array? wtf?
+
+    //NOTE currently 255 is not fully on, it will still turn of for one cycle.
+    // FIXME try to fix it without decreasing the performance
+    if(timer0Cnt < ledBrightness[0])
+    {
+        P3_4 = 1;
+    }
+    else
+    {
+        P3_4 = 0;
+    }
+
+    if(timer0Cnt < ledBrightness[1])
+    {
+        P3_3 = 1;
+    }
+    else
+    {
+        P3_3 = 0;
+    }
+
+    if(timer0Cnt < ledBrightness[2])
+    {
+        P3_2 = 1;
+    }
+    else
+    {
+        P3_2 = 0;
+    }
+
+    //Ideally the strobe should be handled by a different
+    //timer but some of the WS-DMX boards use really simple
+    //STC controllers that only have two timers.
+    //Therefore we generate the strobe tick in here.
+    //one increment of strobeCnt is ~2.48ms
+    if(timer0Cnt == 255)
+    {
+        strobeCnt++;
+    }
+
+    timer0Cnt++;
+
+}
