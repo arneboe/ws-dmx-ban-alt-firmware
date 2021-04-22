@@ -78,6 +78,8 @@ stcgal -P stc15 -p /dev/ttyUSB0  dmx.ihx
 - Flasher RX/GND can stay connected while dmx is received. This is nice for debugging.
 
 
+# Similar Projects
+https://github.com/regnarg/ws-dmx-ban-hf-pwm/ -- implements a 32khz pwm on the WS-DMX-BAN-4CH-V3 board.
 
 
 
